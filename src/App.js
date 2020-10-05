@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import WeatherDisplayClass from './WeatherDisplayClass';
+import WeatherDisplay from './components/WeatherDisplay';
 
 class App extends Component {
   constructor() {
@@ -25,7 +25,7 @@ class App extends Component {
           <button type="submit" value="Отправить">Показать</button>
         </form>
         {this.state.cityName && (
-          <WeatherDisplayClass city={this.state.cityName} />
+          <WeatherDisplay city={this.state.cityName} />
         )}
       </div>
     );
