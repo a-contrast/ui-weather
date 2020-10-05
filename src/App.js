@@ -1,28 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import WeatherDisplayClass from './WeatherDisplayClass';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit
-          <code>src/App.js</code>
-          and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor() {
+    super();
+    this.submitCity = this.submitCity.bind(this);
+    this.state = {
+      cityName: null,
+    };
+    this.textInput = React.createRef();
+  }
+
+  submitCity() {
+    this.setState({ cityName: this.textInput.current.value });
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <form action="/#" onSubmit={this.submitCity}>
+          <input type="search" placeholder="Название города на английском" size="35" ref={this.textInput} />
+          <button type="submit" value="Отправить">Показать</button>
+        </form>
+        {this.state.cityName && (
+          <WeatherDisplayClass city={this.state.cityName} />
+        )}
+      </div>
+    );
+  }
 }
 
 export default App;
