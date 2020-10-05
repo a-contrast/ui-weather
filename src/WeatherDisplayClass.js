@@ -5,42 +5,73 @@ export default class WeatherDisplayClass extends Component {
   constructor() {
     super();
     this.state = {
+      cities: null,
       weatherData: null,
       isWaiting: true,
       errorCity: false,
+      isMultyCity: false,
     };
+    this.getWeather = this.getWeather.bind(this);
   }
 
   componentDidMount() {
-    this.getWeather();
+    this.getCities();
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.city !== prevProps.city) {
-      this.getWeather();
+      this.getCities();
     }
   }
 
-  getWeather() {
-    this.setState({ isWaiting: true });
-    this.setState({ errorCity: false });
-    const { city } = this.props;
-    const URL = `https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/search/?query=${city}`;
+  /**
+   * получаем список найденых городов, если город один, переходим к getweather
+   */
+  getCities() {
+    this.setState({ isWaiting: true, errorCity: false });
+    const { city } = this.props; // значение инпута
+    const URL = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://www.metaweather.com/api/location/search/?query=${city}`)}`;
     fetch(URL)
       .then((res) => res.json())
-      .then((json) => fetch(`https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/${json[0].woeid}`))
-      .then((res) => res.json())
       .then((json) => {
-        this.setState({ weatherData: json, isWaiting: false });
+        const cities = JSON.parse(json.contents);
+        if (cities.length > 1) {
+          this.setState({ cities, isWaiting: false, isMultyCity: true });
+        } else {
+          this.getWeather(cities[0].woeid);
+        }
       })
       .catch(() => {
         this.setState({ errorCity: true });
       });
   }
 
-  render() {
-    const { weatherData } = this.state;
+  /**
+   * получаем массив данных о погоде в выбранном городе, записываем его в weatherData
+   * @param {num} woeid - woeid выбраного города
+   */
+  getWeather(woeid) {
+    this.setState({ isWaiting: true });
+    const URL = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://www.metaweather.com/api/location/${woeid}`)}`;
+    fetch(URL)
+      .then((res) => res.json())
+      .then((json) => {
+        this.setState({
+          weatherData: JSON.parse(json.contents),
+          isWaiting: false,
+          isMultyCity: false,
+        });
+      });
+  }
 
+  render() {
+    const { cities } = this.state; // список имен найденных городов
+    const { weatherData } = this.state; // данные о погоде выбранного города
+    const cityList = cities && cities.map((value, index) => ( // создаем строки списка ul из городов
+      <li key={index}>
+        <a href="#" onClick={() => this.getWeather(value.woeid)}>{value.title}</a>
+      </li>
+    ));
     if (this.state.errorCity) {
       return (
         <div>
@@ -49,7 +80,18 @@ export default class WeatherDisplayClass extends Component {
         </div>
       );
     }
-    if (this.state.isWaiting) return <div>Loading</div>;
+    if (this.state.isWaiting) {
+      return (
+        <div>Loading</div>
+      );
+    }
+    if (this.state.isMultyCity) {
+      return (
+        <ul>
+          {cityList}
+        </ul>
+      );
+    }
     return (
       <div>
         <h2>

@@ -5,14 +5,15 @@ import WeatherDisplayClass from './WeatherDisplayClass';
 class App extends Component {
   constructor() {
     super();
-    this.submitCity = this.submitCity.bind(this);
     this.state = {
       cityName: null,
     };
+    this.submitCity = this.submitCity.bind(this);
     this.textInput = React.createRef();
   }
 
-  submitCity() {
+  submitCity(event) {
+    event.preventDefault();
     this.setState({ cityName: this.textInput.current.value });
   }
 
