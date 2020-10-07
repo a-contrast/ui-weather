@@ -1,30 +1,27 @@
 import React, { Component } from 'react';
 import './App.css';
-import WeatherDisplayClass from './WeatherDisplayClass';
+import WeatherDisplay from './components/WeatherDisplay/WeatherDisplay';
+import SearchForm from './components/SearchForm/SearchForm';
 
 class App extends Component {
   constructor() {
     super();
-    this.submitCity = this.submitCity.bind(this);
     this.state = {
       cityName: null,
     };
-    this.textInput = React.createRef();
+    this.updateCityName = this.updateCityName.bind(this);
   }
 
-  submitCity() {
-    this.setState({ cityName: this.textInput.current.value });
+  updateCityName(cityName) {
+    this.setState({ cityName });
   }
 
   render() {
     return (
-      <div className="App">
-        <form action="/#" onSubmit={this.submitCity}>
-          <input type="search" placeholder="Название города на английском" size="35" ref={this.textInput} />
-          <button type="submit" value="Отправить">Показать</button>
-        </form>
+      <div className="app">
+        <SearchForm updateCityName={this.updateCityName} />
         {this.state.cityName && (
-          <WeatherDisplayClass city={this.state.cityName} />
+          <WeatherDisplay city={this.state.cityName} />
         )}
       </div>
     );

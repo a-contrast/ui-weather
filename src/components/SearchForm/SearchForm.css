@@ -1,0 +1,12 @@
+.nav {
+  justify-content: center;
+}
+
+.nav__form {
+  width: 50%;
+  flex-wrap: nowrap;
+}
+
+.nav__form .nav__input {
+  width: 100%;
+}
