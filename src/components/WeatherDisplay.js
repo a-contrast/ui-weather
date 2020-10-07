@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { List, ListItem, ListItemText } from '@material-ui/core';
+import 'bootstrap/dist/css/bootstrap.css';
+import { ListGroup, Nav, Table } from 'react-bootstrap';
 
 export default class WeatherDisplay extends Component {
   constructor() {
@@ -13,7 +14,6 @@ export default class WeatherDisplay extends Component {
       isMultyCity: false,
     };
     this.getWeather = this.getWeather.bind(this);
-    this.ListItemLink = this.ListItemLink.bind(this);
   }
 
   componentDidMount() {
@@ -66,26 +66,17 @@ export default class WeatherDisplay extends Component {
       });
   }
 
-  ListItemLink(props) {
-    return <ListItem button component="a" {...props} />;
-  }
-
   render() {
     const { cities } = this.state; // список имен найденных городов
     const { weatherData } = this.state; // данные о погоде выбранного города
     const cityList = cities && cities.map((value, index) => ( // создаем строки списка ul из городов
-      <this.ListItemLink
-        key={index}
-        href="#"
-        onClick={() => this.getWeather(value.woeid)}
-        style={{ textAlign: 'center' }}
-      >
-        <ListItemText primary={value.title} />
-      </this.ListItemLink>
+      <ListGroup.Item key={index}>
+        <a href="#" onClick={() => this.getWeather(value.woeid)}>{value.title}</a>
+      </ListGroup.Item>
     ));
     if (this.state.errorCity) {
       return (
-        <div>
+        <div style={{ width: '50%', margin: 'auto' }}>
           <p>Имя города не найдено.</p>
           <p>Проверьте правильность написания, либо введите ближайший крупный населенный пункт</p>
         </div>
@@ -93,45 +84,99 @@ export default class WeatherDisplay extends Component {
     }
     if (this.state.isWaiting) {
       return (
-        <div>Loading</div>
+        <div style={{ width: '50%', margin: 'auto' }}><b>Loading...</b></div>
       );
     }
     if (this.state.isMultyCity) {
       return (
-        <div>
-          <h4>Список найденных городов</h4>
-          <p>Выберите из списка интересующий Вас город</p>
-          <div>
-            <List>
+        <div style={{ width: '50%', margin: 'auto' }}>
+          <h4>Выберите Ваш город</h4>
+          <Nav bsStyle="pills" stacked>
+            <ListGroup variant="flush" style={{ width: '100%' }}>
               {cityList}
-            </List>
-          </div>
+            </ListGroup>
+          </Nav>
         </div>
       );
     }
     return (
-      <div>
-        <h2>
-          Температура в городе {weatherData.title}
-        </h2>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+      >
+        <h3>
+          Погода в городе {weatherData.title}
+        </h3>
+        <p>
+          на <b>{weatherData.consolidated_weather[0].applicable_date}</b>
+        </p>
         <img
           className="ImgState"
-          width="50"
-          height="50"
+          width="100"
+          height="100"
           src={`https://www.metaweather.com/static/img/weather/${weatherData.consolidated_weather[0].weather_state_abbr}.svg`}
           alt="Картинка погоды"
         />
-        <div>
-          температура на {weatherData.consolidated_weather[0].applicable_date}
-        </div>
-        <div>
-          минимальная: {Math.round(weatherData.consolidated_weather[0].min_temp)}&deg;C
-        </div>
-        <div>
-          максимальная: {Math.round(weatherData.consolidated_weather[0].max_temp)}&deg;C
-        </div>
-        <div>
-          текущая: {Math.round(weatherData.consolidated_weather[0].the_temp)}&deg;C
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          width: '50%',
+        }}
+        >
+          <Table striped borderless hover style={{ flexGrow: '0', width: '30%' }}>
+            <thead>
+              <tr>
+                <th>Температура</th>
+                <th>&deg;C</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>текущая</td>
+                <td>{Math.round(weatherData.consolidated_weather[0].the_temp)}</td>
+              </tr>
+              <tr>
+                <td>минимальная</td>
+                <td>{Math.round(weatherData.consolidated_weather[0].min_temp)}</td>
+              </tr>
+              <tr>
+                <td>максимальная</td>
+                <td>{Math.round(weatherData.consolidated_weather[0].max_temp)}</td>
+              </tr>
+            </tbody>
+          </Table>
+          <Table striped borderless hover style={{ flexGrow: '0', width: '30%' }}>
+            <thead>
+              <tr>
+                <th>Ветер</th>
+                <th>м/с</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>скорость</td>
+                <td>{Math.round(weatherData.consolidated_weather[0].wind_speed * 0.44704)}</td>
+              </tr>
+            </tbody>
+          </Table>
+          <Table striped borderless hover style={{ flexGrow: '0', width: '30%' }}>
+            <thead>
+              <tr>
+                <th>Давление</th>
+                <th>мм.рт.ст</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>давление</td>
+                <td>{Math.round(weatherData.consolidated_weather[0].air_pressure * 0.750062)}</td>
+              </tr>
+            </tbody>
+          </Table>
+
         </div>
       </div>
     );

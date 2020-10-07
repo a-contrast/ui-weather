@@ -1,29 +1,37 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Button } from '@material-ui/core';
+import 'bootstrap/dist/css/bootstrap.css';
+import {
+  Form, FormControl, Button, Navbar,
+} from 'react-bootstrap';
 
 export default class SearchForm extends Component {
   constructor() {
     super();
     this.submitCity = this.submitCity.bind(this);
-    this.textInput = null;
+    this.textInput = React.createRef();
+    this.reload = this.reload.bind(this);
+  }
+
+  reload() {
+    window.location.reload();
   }
 
   submitCity(event) {
     event.preventDefault();
-    this.props.updateCityName(this.textInput.value);
+    this.props.updateCityName(this.textInput.current.value);
   }
 
   render() {
     return (
       <div>
-        <form action="/#" onSubmit={this.submitCity}>
-          <Input placeholder="Название города на английском" style={{ minWidth: '20%' }} inputRef={(ref) => { this.textInput = ref; }} inputProps={{ 'aria-label': 'description' }} />
-          <Button variant="contained" color="primary" type="submit" value="Отправить" size="small">
-            Показать
-          </Button>
-          {/* <button type="submit" value="Отправить">Показать</button> */}
-        </form>
+        <Navbar bg="light" variant="light" style={{ justifyContent: 'center' }}>
+          <Navbar.Brand href="#" onClick={this.reload}>UI-Weather</Navbar.Brand>
+          <Form inline action="/#" onSubmit={this.submitCity} style={{ width: '50%', flexWrap: 'nowrap' }}>
+            <FormControl type="search" placeholder="Введите название города на английском" className="mr-sm-2" ref={this.textInput} style={{ width: '100%' }} />
+            <Button variant="outline-primary" type="submit" value="Отправить">Поиск</Button>
+          </Form>
+        </Navbar>
       </div>
     );
   }
