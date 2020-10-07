@@ -28,6 +28,7 @@
         "arrow-parens": [1],
         "react/jsx-one-expression-per-line": [0],
         "jsx-a11y/anchor-is-valid": [0],
-        "linebreak-style": ["error", "windows"]
+        "linebreak-style": ["error", "windows"],
+        "react/jsx-props-no-spreading": [0]
     }
 }

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { List, ListItem, ListItemText } from '@material-ui/core';
 
-export default class WeatherDisplayClass extends Component {
+export default class WeatherDisplay extends Component {
   constructor() {
     super();
     this.state = {
@@ -12,6 +13,7 @@ export default class WeatherDisplayClass extends Component {
       isMultyCity: false,
     };
     this.getWeather = this.getWeather.bind(this);
+    this.ListItemLink = this.ListItemLink.bind(this);
   }
 
   componentDidMount() {
@@ -64,13 +66,22 @@ export default class WeatherDisplayClass extends Component {
       });
   }
 
+  ListItemLink(props) {
+    return <ListItem button component="a" {...props} />;
+  }
+
   render() {
     const { cities } = this.state; // список имен найденных городов
     const { weatherData } = this.state; // данные о погоде выбранного города
     const cityList = cities && cities.map((value, index) => ( // создаем строки списка ul из городов
-      <li key={index}>
-        <a href="#" onClick={() => this.getWeather(value.woeid)}>{value.title}</a>
-      </li>
+      <this.ListItemLink
+        key={index}
+        href="#"
+        onClick={() => this.getWeather(value.woeid)}
+        style={{ textAlign: 'center' }}
+      >
+        <ListItemText primary={value.title} />
+      </this.ListItemLink>
     ));
     if (this.state.errorCity) {
       return (
@@ -87,9 +98,15 @@ export default class WeatherDisplayClass extends Component {
     }
     if (this.state.isMultyCity) {
       return (
-        <ul>
-          {cityList}
-        </ul>
+        <div>
+          <h4>Список найденных городов</h4>
+          <p>Выберите из списка интересующий Вас город</p>
+          <div>
+            <List>
+              {cityList}
+            </List>
+          </div>
+        </div>
       );
     }
     return (
@@ -108,14 +125,17 @@ export default class WeatherDisplayClass extends Component {
           температура на {weatherData.consolidated_weather[0].applicable_date}
         </div>
         <div>
-          минимальная {Math.round(weatherData.consolidated_weather[0].min_temp)}&deg;C
+          минимальная: {Math.round(weatherData.consolidated_weather[0].min_temp)}&deg;C
         </div>
         <div>
-          максимальная {Math.round(weatherData.consolidated_weather[0].max_temp)}&deg;C
+          максимальная: {Math.round(weatherData.consolidated_weather[0].max_temp)}&deg;C
+        </div>
+        <div>
+          текущая: {Math.round(weatherData.consolidated_weather[0].the_temp)}&deg;C
         </div>
       </div>
     );
   }
 }
 
-WeatherDisplayClass.propTypes = { city: PropTypes.string.isRequired };
+WeatherDisplay.propTypes = { city: PropTypes.string.isRequired };
