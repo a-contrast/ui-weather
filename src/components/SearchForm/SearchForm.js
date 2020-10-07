@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './SearchForm.css';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.css';
 import {
@@ -18,17 +19,24 @@ export default class SearchForm extends Component {
   }
 
   submitCity(event) {
+    const inputValue = this.textInput.current.value;
     event.preventDefault();
-    this.props.updateCityName(this.textInput.current.value);
+    this.props.updateCityName(inputValue);
   }
 
   render() {
     return (
       <div>
-        <Navbar bg="light" variant="light" style={{ justifyContent: 'center' }}>
+        <Navbar className="nav" bg="light" variant="light">
           <Navbar.Brand href="#" onClick={this.reload}>UI-Weather</Navbar.Brand>
-          <Form inline action="/#" onSubmit={this.submitCity} style={{ width: '50%', flexWrap: 'nowrap' }}>
-            <FormControl type="search" placeholder="Введите название города на английском" className="mr-sm-2" ref={this.textInput} style={{ width: '100%' }} />
+          <Form className="nav__form" inline action="/#" onSubmit={this.submitCity}>
+            <FormControl
+              className="mr-sm-2 nav__input"
+              type="search"
+              placeholder="Введите название города на английском, минимум 3 симв."
+              minLength="3"
+              ref={this.textInput}
+            />
             <Button variant="outline-primary" type="submit" value="Отправить">Поиск</Button>
           </Form>
         </Navbar>

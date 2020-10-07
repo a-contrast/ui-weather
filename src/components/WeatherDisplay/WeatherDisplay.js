@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.css';
 import { ListGroup, Nav, Table } from 'react-bootstrap';
+import './WeatherDisplay.css';
 
 export default class WeatherDisplay extends Component {
   constructor() {
@@ -76,7 +77,7 @@ export default class WeatherDisplay extends Component {
     ));
     if (this.state.errorCity) {
       return (
-        <div style={{ width: '50%', margin: 'auto' }}>
+        <div className="message">
           <p>Имя города не найдено.</p>
           <p>Проверьте правильность написания, либо введите ближайший крупный населенный пункт</p>
         </div>
@@ -84,15 +85,15 @@ export default class WeatherDisplay extends Component {
     }
     if (this.state.isWaiting) {
       return (
-        <div style={{ width: '50%', margin: 'auto' }}><b>Loading...</b></div>
+        <div className="message"><b>Loading...</b></div>
       );
     }
     if (this.state.isMultyCity) {
       return (
-        <div style={{ width: '50%', margin: 'auto' }}>
-          <h4>Выберите Ваш город</h4>
+        <div className="message cities">
+          <h4>Список найденных городов</h4>
           <Nav bsStyle="pills" stacked>
-            <ListGroup variant="flush" style={{ width: '100%' }}>
+            <ListGroup className="cities__list" variant="flush">
               {cityList}
             </ListGroup>
           </Nav>
@@ -100,12 +101,7 @@ export default class WeatherDisplay extends Component {
       );
     }
     return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-      >
+      <div className="weather">
         <h3>
           Погода в городе {weatherData.title}
         </h3>
@@ -119,14 +115,8 @@ export default class WeatherDisplay extends Component {
           src={`https://www.metaweather.com/static/img/weather/${weatherData.consolidated_weather[0].weather_state_abbr}.svg`}
           alt="Картинка погоды"
         />
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          width: '50%',
-        }}
-        >
-          <Table striped borderless hover style={{ flexGrow: '0', width: '30%' }}>
+        <div className="weather__tables tables">
+          <Table className="tables__table" striped borderless hover>
             <thead>
               <tr>
                 <th>Температура</th>
@@ -148,7 +138,7 @@ export default class WeatherDisplay extends Component {
               </tr>
             </tbody>
           </Table>
-          <Table striped borderless hover style={{ flexGrow: '0', width: '30%' }}>
+          <Table striped borderless hover className="tables__table">
             <thead>
               <tr>
                 <th>Ветер</th>
@@ -162,7 +152,7 @@ export default class WeatherDisplay extends Component {
               </tr>
             </tbody>
           </Table>
-          <Table striped borderless hover style={{ flexGrow: '0', width: '30%' }}>
+          <Table striped borderless hover className="tables__table">
             <thead>
               <tr>
                 <th>Давление</th>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import WeatherDisplay from './components/WeatherDisplay';
-import SearchForm from './components/SearchForm';
+import WeatherDisplay from './components/WeatherDisplay/WeatherDisplay';
+import SearchForm from './components/SearchForm/SearchForm';
 
 class App extends Component {
   constructor() {
@@ -18,7 +18,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="app">
         <SearchForm updateCityName={this.updateCityName} />
         {this.state.cityName && (
           <WeatherDisplay city={this.state.cityName} />

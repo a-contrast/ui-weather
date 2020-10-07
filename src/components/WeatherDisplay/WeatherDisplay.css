@@ -1,0 +1,26 @@
+.message {
+  width: 50%;
+  margin: auto;
+}
+
+.cities__list {
+  width: 100%;
+}
+
+.weather {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.weather__tables {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 50%;
+}
+
+.tables__table {
+  flex-grow: 0;
+  width: 30%;
+}
